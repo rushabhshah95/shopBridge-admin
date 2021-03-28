@@ -1,0 +1,5 @@
+/* Styles for common - editable component */
+
+:host {
+    display: block;
+  }

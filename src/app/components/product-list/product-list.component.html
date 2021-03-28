@@ -1,0 +1,101 @@
+<!--Show - If unable to fetch product details from backend-->
+<section *ngIf="showListProductFailMsg">
+  <h4>Some How unable to fetch list of Products! Could you please check your network and try again?</h4>
+</section>
+
+<!--Show - If able to fetch product details from backend -->
+<section *ngIf="!showListProductFailMsg">
+  <div class="container">
+    <h4 class="text-center"><u>Manage Products</u></h4>
+    <!--Display validation messages on on success/fail operation of update and elete product details -->
+    <div class="text-center" *ngIf="showProductUpdateSuccessMsg || showProductUpdateFailMsg">
+      <div class="success-message">
+        <p *ngIf="showProductUpdateSuccessMsg">
+            <strong>{{ productUpdatedSuccessMsg }}</strong>
+        </p>
+      </div>
+      <div class="error-message">
+        <p  *ngIf="showProductUpdateFailMsg">
+          <strong>{{ productUpdateFailMsg }}</strong>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div *ngFor="let product of products; index as index" class="col-lg-6 col-md-3 col-xs-12 col-sm-12 mb-4">
+        <!--On card hover displaying a tooltip for 3 seconds to direct user on how to switch between view and edit mode -->
+        <div class="card h-100" ngbTooltip="Double Click on a details to update and click on save button to save updated details!"
+          [openDelay]="1000" [closeDelay]="3000">
+          <div class="card-header text-center">
+            <label>Id:</label>
+            {{product.productId}}</div>
+          <!--Card Body starts here -->
+          <div class="card-body">
+            <!--Card Body Title - view & edit mode for product name is here in view-->
+            <h6 class="card-title">
+              <editable (update)="updateField(index, 'productName')">
+                <ng-template viewMode>
+                  <label>Name:</label>
+                  <br>
+                  <p>{{product.productName}}</p>
+                </ng-template>
+                <ng-template editMode>
+                  <input type="text"
+                  class="form-control" 
+                  [formControl]="getControl(index, 'productName')" 
+                  focusable>
+                  <div *ngIf="productNameValidationMsg"
+                    class="error-message">
+                    Product name should contains Alphabets and it should be less than 20 characters. 
+                  </div>
+                </ng-template>
+              </editable>
+            </h6>
+            <!--Card Body Text - view & edit mode for product description and price are here in view-->
+            <div class="card-text">
+              <editable (update)="updateField(index, 'productDesc')">
+                <ng-template viewMode>
+                  <label>Description:</label>
+                  <br> 
+                  <p>{{product.productDesc}}</p>
+                </ng-template>
+                <ng-template editMode>
+                  <textarea  class="form-control" [formControl]="getControl(index, 'productDesc')" focusable></textarea>
+                  <div *ngIf="productNameValidationMsg"
+                    class="error-message">
+                    Product description should not contain special characters and it should be less than 50 characters. 
+                  </div>
+                </ng-template>
+              </editable>
+              <editable (update)="updateField(index, 'productPrice')">
+                <ng-template viewMode>
+                  <label>Price:</label>
+                  <br> 
+                  <p><span>$&nbsp;</span>{{product.productPrice}}</p>
+                </ng-template>
+                <ng-template editMode>
+                  <input type="text"  class="form-control" [formControl]="getControl(index, 'productPrice')" focusable />
+                  <div *ngIf="productPriceValidationMsg"
+                    class="error-message">
+                    Product price should be in digits upto two decimals.  
+                  </div>
+                </ng-template>
+              </editable>
+            </div>
+          </div>
+          <!--Card Footer - Save and delete product features are here in view-->
+          <div class="card-footer text-center">
+            <button class="btn btn-success mr-2" (click)="saveCurrentProduct(product)" type="button" id="save">
+              <fa-icon [icon]="saveIcon"></fa-icon>&nbsp;Save
+            </button>
+            <button class="btn btn-danger" (click)="deleteCurrentProduct(product)" type="button" id="delete">
+              <fa-icon [icon]="deleteIcon"></fa-icon>&nbsp;Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
